@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purrsona - Virtual Pet Game</title>
+    <meta name="description" content="Take care of your adorable virtual cat! Feed, play, and watch it grow.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fae8ff 50%, #dbeafe 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-screen {
+            max-width: 28rem;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #ec4899, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+        }
+
+        .cat-emoji {
+            font-size: 5rem;
+            animation: bounce 1s infinite;
+            margin: 2rem 0;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(-3deg);
+            }
+
+            50% {
+                transform: rotate(3deg);
+            }
+        }
+
+        .wiggle {
+            animation: wiggle 0.5s ease-in-out infinite;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.25rem;
+            text-align: center;
+            background: #f9fafb;
+            border: 2px solid #d8b4fe;
+            border-radius: 1rem;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #a855f7;
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(to right, #ec4899, #a855f7);
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        button:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .game-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .game-title h2 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .game-title p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .reset-btn {
+            width: auto;
+            padding: 0.5rem 1rem;
+            background: #eab308;
+            font-size: 0.875rem;
+        }
+
+        .reset-btn:hover {
+            background: #ca8a04;
+        }
+
+        .pet-info {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .pet-name {
+            font-size: 2.25rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #ec4899, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pet-age {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin: 0.5rem 0;
+        }
+
+        .mood-message {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #374151;
+            margin-top: 0.5rem;
+        }
+
+        .cat-character {
+            display: flex;
+            justify-content: center;
+            padding: 3rem 0;
+        }
+
+        .cat-container {
+            font-size: 5rem;
+            transition: all 0.3s;
+        }
+
+        .stats-container {
+            max-width: 28rem;
+            margin: 0 auto 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .stat-bar {
+            width: 100%;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .stat-value {
+            font-size: 0.875rem;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .stat-progress {
+            width: 100%;
+            height: 0.75rem;
+            background: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .stat-fill {
+            height: 100%;
+            transition: width 0.5s ease-out;
+            border-radius: 9999px;
+        }
+
+        .stat-health {
+            color: #ef4444;
+        }
+
+        .stat-health .stat-fill {
+            background: #ef4444;
+        }
+
+        .stat-hunger {
+            color: #22c55e;
+        }
+
+        .stat-hunger .stat-fill {
+            background: #22c55e;
+        }
+
+        .stat-happiness {
+            color: #eab308;
+        }
+
+        .stat-happiness .stat-fill {
+            background: #eab308;
+        }
+
+        .stat-energy {
+            color: #3b82f6;
+        }
+
+        .stat-energy .stat-fill {
+            background: #3b82f6;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            max-width: 28rem;
+            margin: 0 auto;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 1rem;
+            font-size: 1.125rem;
+        }
+
+        .action-feed {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+        }
+
+        .action-play {
+            background: linear-gradient(135deg, #c084fc, #a855f7);
+        }
+
+        .action-sleep {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        }
+
+        .action-medicine {
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+        }
+
+        .tips-box {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: linear-gradient(to right, #fce7f3, #f3e8ff);
+            border-radius: 1rem;
+        }
+
+        .tips-box h3 {
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .tips-box ul {
+            font-size: 0.875rem;
+            color: #374151;
+            list-style-position: inside;
+        }
+
+        .tips-box li {
+            margin: 0.25rem 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .cat-emoji {
+                font-size: 4rem;
+            }
+
+            .cat-container {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="container">
+        <div class="card welcome-screen">
+            <h1>Purrsona</h1>
+            <p class="subtitle">Your virtual pet companion</p>
+            <div class="cat-emoji">🐱</div>
+            <form id="nameForm">
+                <label for="petName"
+                    style="font-size: 1.125rem; font-weight: 600; display: block; margin-bottom: 0.5rem;">
+                    What's your cat's name?
+                </label>
+                <input type="text" id="petName" placeholder="Enter a name..." maxlength="20" required autofocus />
+                <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                    Choose a special name for your pet
+                </p>
+                <button type="submit">
+                    ✨ Create My Pet
+                </button>
+            </form>
+            <div style="margin-top: 2rem;">
+                <p style="font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                    Take care of your adorable cat!
+                </p>
+                <p style="font-size: 0.875rem; color: #6b7280;">
+                    Feed, play, and watch it grow
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="container hidden">
+        <div class="card">
+            <div class="game-header">
+                <div class="game-title">
+                    <div style="font-size: 3rem;">🐱</div>
+                    <div>
+                        <h2>Purrsona</h2>
+                        <p>Virtual Pet Game</p>
+                    </div>
+                </div>
+                <button class="reset-btn" onclick="resetGame()">
+                    🔄 Reset
+                </button>
+            </div>
+
+            <div class="pet-info">
+                <h3 class="pet-name" id="petName"></h3>
+                <div class="pet-age">
+                    <span>🕐</span>
+                    <span>Age: <span id="petAge">0</span> hours</span>
+                </div>
+                <p class="mood-message" id="moodMessage"></p>
+            </div>
+
+            <div class="cat-character">
+                <div class="cat-container" id="catCharacter">
+                    🐱
+                </div>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-bar">
+                    <div class="stat-header">
+                        <div class="stat-label stat-health">
+                            <span>❤️</span>
+                            <span>Health</span>
+                        </div>
+                        <span class="stat-value"><span id="healthValue">100</span>/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill" id="healthBar" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-header">
+                        <div class="stat-label stat-hunger">
+                            <span>🍎</span>
+                            <span>Hunger</span>
+                        </div>
+                        <span class="stat-value"><span id="hungerValue">50</span>/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill" id="hungerBar" style="width: 50%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-header">
+                        <div class="stat-label stat-happiness">
+                            <span>😊</span>
+                            <span>Happiness</span>
+                        </div>
+                        <span class="stat-value"><span id="happinessValue">50</span>/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill" id="happinessBar" style="width: 50%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-header">
+                        <div class="stat-label stat-energy">
+                            <span>⚡</span>
+                            <span>Energy</span>
+                        </div>
+                        <span class="stat-value"><span id="energyValue">50</span>/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill" id="energyBar" style="width: 50%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions-grid">
+                <button class="action-btn action-feed" onclick="feed()">
+                    🍖
+                    <span>Feed</span>
+                </button>
+                <button class="action-btn action-play" id="playBtn" onclick="play()">
+                    🎾
+                    <span>Play</span>
+                </button>
+                <button class="action-btn action-sleep" onclick="sleep()">
+                    😴
+                    <span>Sleep</span>
+                </button>
+                <button class="action-btn action-medicine" id="medicineBtn" onclick="giveMedicine()">
+                    💊
+                    <span>Medicine</span>
+                </button>
+            </div>
+
+            <div class="tips-box">
+                <h3>💡 Tips:</h3>
+                <ul>
+                    <li>• Feed your cat regularly to keep hunger levels high</li>
+                    <li>• Play to increase happiness, but watch the energy!</li>
+                    <li>• Let your cat sleep to restore energy</li>
+                    <li>• Use medicine when health is low</li>
+                    <li>• Stats decrease over time, so check in often!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'purrsona-game';
+        const UPDATE_INTERVAL = 5000;
+        const STAT_DECAY_RATE = {
+            hunger: 2,
+            happiness: 1.5,
+            energy: 1,
+        };
+        const ACTION_EFFECTS = {
+            feed: { hunger: 30, health: 5 },
+            play: { happiness: 25, energy: -15 },
+            sleep: { energy: 40, happiness: 10 },
+            medicine: { health: 30 },
+        };
+
+        let gameState = null;
+        let updateInterval = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGame();
+        });
+
+        document.getElementById('nameForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('petName').value.trim();
+            if (name) {
+                createPet(name);
+            }
+        });
+
+        function loadGame() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                gameState = JSON.parse(saved);
+                showGame();
+            } else {
+                showWelcome();
+            }
+        }
+
+        function createPet(name) {
+            gameState = {
+                name: name,
+                hunger: 50,
+                happiness: 50,
+                energy: 50,
+                health: 100,
+                age: 0,
+                mood: 'neutral',
+                lastFed: Date.now(),
+                lastPlayed: Date.now(),
+                lastSlept: Date.now(),
+                createdAt: Date.now(),
+            };
+            saveGame();
+            showGame();
+        }
+
+        function showWelcome() {
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
+        }
+
+        function showGame() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            updateUI();
+            startUpdateLoop();
+        }
+
+        function saveGame() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
+        }
+
+        function startUpdateLoop() {
+            if (updateInterval) clearInterval(updateInterval);
+            updateInterval = setInterval(() => {
+                updateStats();
+                updateUI();
+                saveGame();
+            }, UPDATE_INTERVAL);
+        }
+
+        function updateStats() {
+            const now = Date.now();
+
+            // Calculate decay
+            const minutesSinceFed = (now - gameState.lastFed) / 60000;
+            const minutesSincePlayed = (now - gameState.lastPlayed) / 60000;
+            const minutesSlept = (now - gameState.lastSlept) / 60000;
+
+            gameState.hunger = Math.max(0, gameState.hunger - minutesSinceFed * STAT_DECAY_RATE.hunger);
+            gameState.happiness = Math.max(0, gameState.happiness - minutesSincePlayed * STAT_DECAY_RATE.happiness);
+            gameState.energy = Math.max(0, gameState.energy - minutesSlept * STAT_DECAY_RATE.energy);
+
+            // Update health
+            if (gameState.hunger < 20 || gameState.energy < 20) {
+                gameState.health = Math.max(0, gameState.health - 0.5);
+            } else if (gameState.hunger > 60 && gameState.energy > 60 && gameState.health < 100) {
+                gameState.health = Math.min(100, gameState.health + 0.2);
+            }
+
+            // Calculate age
+            gameState.age = Math.floor((now - gameState.createdAt) / (1000 * 60 * 60));
+
+            // Update mood
+            gameState.mood = calculateMood();
+
+            // Update last times
+            gameState.lastFed = now;
+            gameState.lastPlayed = now;
+            gameState.lastSlept = now;
+        }
+
+        function calculateMood() {
+            if (gameState.health < 30) return 'sick';
+            if (gameState.hunger < 20) return 'hungry';
+            if (gameState.energy < 20) return 'tired';
+            if (gameState.happiness < 30) return 'sad';
+            if (gameState.happiness > 70 && gameState.hunger > 60 && gameState.energy > 60) return 'happy';
+            return 'neutral';
+        }
+
+        function updateUI() {
+            document.getElementById('petName').textContent = gameState.name;
+            document.getElementById('petAge').textContent = gameState.age;
+
+            // Update stats
+            updateStat('health', gameState.health);
+            updateStat('hunger', gameState.hunger);
+            updateStat('happiness', gameState.happiness);
+            updateStat('energy', gameState.energy);
+
+            // Update mood message
+            const moodMessages = {
+                happy: `${gameState.name} is feeling great! 🌟`,
+                sad: `${gameState.name} is feeling down... 😢`,
+                tired: `${gameState.name} needs some rest... 😴`,
+                hungry: `${gameState.name} is hungry! 🍖`,
+                sick: `${gameState.name} is not feeling well! 🤒`,
+                neutral: `${gameState.name} is doing okay.`
+            };
+            document.getElementById('moodMessage').textContent = moodMessages[gameState.mood];
+
+            // Update cat character
+            const catEmojis = {
+                happy: '😺',
+                sad: '😿',
+                tired: '😴',
+                hungry: '😸',
+                sick: '🤒',
+                neutral: '🐱'
+            };
+            document.getElementById('catCharacter').textContent = catEmojis[gameState.mood];
+
+            // Update button states
+            document.getElementById('playBtn').disabled = gameState.energy < 15;
+            document.getElementById('medicineBtn').disabled = gameState.health >= 90;
+        }
+
+        function updateStat(stat, value) {
+            const rounded = Math.round(value);
+            document.getElementById(stat + 'Value').textContent = rounded;
+            document.getElementById(stat + 'Bar').style.width = rounded + '%';
+        }
+
+        function animateAction(emoji) {
+            const cat = document.getElementById('catCharacter');
+            const originalEmoji = cat.textContent;
+            cat.textContent = emoji;
+            cat.classList.add('wiggle');
+            setTimeout(() => {
+                cat.textContent = originalEmoji;
+                cat.classList.remove('wiggle');
+            }, 2000);
+        }
+
+        function feed() {
+            gameState.hunger = Math.min(100, gameState.hunger + ACTION_EFFECTS.feed.hunger);
+            gameState.health = Math.min(100, gameState.health + ACTION_EFFECTS.feed.health);
+            gameState.lastFed = Date.now();
+            animateAction('😋');
+            updateUI();
+            saveGame();
+        }
+
+        function play() {
+            if (gameState.energy < 15) return;
+            gameState.happiness = Math.min(100, gameState.happiness + ACTION_EFFECTS.play.happiness);
+            gameState.energy = Math.max(0, gameState.energy + ACTION_EFFECTS.play.energy);
+            gameState.lastPlayed = Date.now();
+            animateAction('🎾');
+            updateUI();
+            saveGame();
+        }
+
+        function sleep() {
+            gameState.energy = Math.min(100, gameState.energy + ACTION_EFFECTS.sleep.energy);
+            gameState.happiness = Math.min(100, gameState.happiness + ACTION_EFFECTS.sleep.happiness);
+            gameState.lastSlept = Date.now();
+            animateAction('💤');
+            updateUI();
+            saveGame();
+        }
+
+        function giveMedicine() {
+            if (gameState.health >= 90) return;
+            gameState.health = Math.min(100, gameState.health + ACTION_EFFECTS.medicine.health);
+            animateAction('💊');
+            updateUI();
+            saveGame();
+        }
+
+        function resetGame() {
+            if (confirm('Reset your pet? This will start over and you can create a new pet!')) {
+                localStorage.removeItem(STORAGE_KEY);
+                if (updateInterval) clearInterval(updateInterval);
+                gameState = null;
+                document.getElementById('petName').value = '';
+                showWelcome();
+            }
+        }
+    </script>
+</body>
+
+</html>
