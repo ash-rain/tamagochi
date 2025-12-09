@@ -1,23 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { signOut } from 'next-auth/react'
 import { useGameState } from '@/lib/useGameState'
 import { CatCharacter } from './CatCharacter'
 import { StatsBar } from './StatsBar'
 import { GameActions } from './GameActions'
-import { LogOut, RotateCcw, Clock } from 'lucide-react'
+import { PetNameSelector } from './PetNameSelector'
+import { RotateCcw, Clock } from 'lucide-react'
 
-interface GameClientProps {
-  user: {
-    id?: string
-    name?: string | null
-    email?: string | null
-    image?: string | null
-  }
-}
-
-export function GameClient({ user }: GameClientProps) {
+export function GameClient() {
   const {
     gameState,
     isLoaded,
@@ -25,8 +16,9 @@ export function GameClient({ user }: GameClientProps) {
     play,
     sleep,
     giveMedicine,
+    createPet,
     resetGame,
-  } = useGameState(user.email || user.id)
+  } = useGameState()
 
   const [currentAction, setCurrentAction] = useState<'eating' | 'playing' | 'sleeping' | null>(null)
 
@@ -40,10 +32,14 @@ export function GameClient({ user }: GameClientProps) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 dark:from-gray-900 dark:via-purple-900 dark:to-blue-900">
         <div className="text-2xl font-bold text-gray-700 dark:text-gray-300 animate-pulse">
-          Loading your pet...
+          Loading...
         </div>
       </div>
     )
+  }
+
+  if (!gameState) {
+    return <PetNameSelector onNameSubmit={createPet} />
   }
 
   const getMoodMessage = () => {
@@ -63,26 +59,20 @@ export function GameClient({ user }: GameClientProps) {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-            {user.image && (
-              <img
-                src={user.image}
-                alt={user.name || 'User'}
-                className="w-12 h-12 rounded-full border-2 border-purple-500"
-              />
-            )}
+            <div className="text-5xl">🐱</div>
             <div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
-                {user.name || 'Player'}
+                Tamagotchi Cat
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {user.email}
+                Virtual Pet Game
               </p>
             </div>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => {
-                if (confirm('Reset your pet? This will start over!')) {
+                if (confirm('Reset your pet? This will start over and you can create a new pet!')) {
                   resetGame()
                 }
               }}
@@ -90,13 +80,6 @@ export function GameClient({ user }: GameClientProps) {
             >
               <RotateCcw className="w-4 h-4" />
               Reset
-            </button>
-            <button
-              onClick={() => signOut({ callbackUrl: '/' })}
-              className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
             </button>
           </div>
         </div>

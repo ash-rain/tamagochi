@@ -1,6 +1,6 @@
 # 🐱 Tamagotchi Cat Game
 
-A cute virtual pet Tamagotchi-style game featuring an adorable cat character! Built with Next.js 15, React 19, TypeScript, and NextAuth for Google authentication.
+A cute virtual pet Tamagotchi-style game featuring an adorable cat character! Built with Next.js 15, React 19, and TypeScript.
 
 ## ✨ Features
 
@@ -8,14 +8,14 @@ A cute virtual pet Tamagotchi-style game featuring an adorable cat character! Bu
 - 😺 **Cute Cat Character**: Animated cat with different moods and expressions
 - 📊 **Real-time Stats**: Track hunger, happiness, energy, and health
 - 🎨 **Beautiful UI**: Modern design with smooth animations
-- 🔐 **Google Authentication**: Secure login with Google OAuth
-- 💾 **Persistent Storage**: Your pet's data is saved locally per user
+- 🐾 **Pet Naming**: Choose a unique name for your virtual pet
+- 💾 **Persistent Storage**: Your pet's data is saved locally in your browser
 - ⏰ **Time-based Mechanics**: Stats decrease over time, requiring regular care
 - 🌓 **Dark Mode Support**: Looks great in light and dark themes
 
 ## 🎯 How to Play
 
-1. **Sign in** with your Google account
+1. **Name your pet** when you first start the game
 2. **Take care** of your cat by:
    - 🍖 **Feed**: Increases hunger and health
    - 🎾 **Play**: Boosts happiness (costs energy)
@@ -30,7 +30,6 @@ A cute virtual pet Tamagotchi-style game featuring an adorable cat character! Bu
 ### Prerequisites
 
 - Node.js 18+ installed
-- A Google Cloud Project for OAuth credentials
 
 ### Installation
 
@@ -39,28 +38,14 @@ A cute virtual pet Tamagotchi-style game featuring an adorable cat character! Bu
 npm install
 ```
 
-2. Set up Google OAuth:
-   - Go to [Google Cloud Console](https://console.cloud.google.com/)
-   - Create a new project or select existing
-   - Navigate to **APIs & Services > Credentials**
-   - Create **OAuth 2.0 Client ID**
-   - Add authorized redirect URI: `http://localhost:3000/api/auth/callback/google`
-   - Copy your Client ID and Client Secret
-
-3. Configure environment variables in `.env.local`:
-   ```env
-   GOOGLE_CLIENT_ID=your_google_client_id_here
-   GOOGLE_CLIENT_SECRET=your_google_client_secret_here
-   AUTH_SECRET=your_auth_secret_here
-   ```
-   - Generate AUTH_SECRET with: `openssl rand -base64 32`
-
-4. Run the development server:
+2. Run the development server:
 ```bash
 npm run dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
+3. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+4. Enter a name for your virtual pet and start playing!
 
 ## 🛠️ Tech Stack
 
@@ -68,16 +53,15 @@ npm run dev
 - **UI Library**: React 19
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS 4
-- **Authentication**: NextAuth.js v5
 - **Icons**: Lucide React
 - **State Management**: React Hooks
+- **Storage**: Browser LocalStorage
 
 ## 📁 Project Structure
 
 ```
 tamagochi/
 ├── app/
-│   ├── api/auth/[...nextauth]/  # NextAuth API routes
 │   ├── globals.css              # Global styles & animations
 │   ├── layout.tsx               # Root layout
 │   └── page.tsx                 # Main game page
@@ -85,14 +69,11 @@ tamagochi/
 │   ├── CatCharacter.tsx         # Animated cat character
 │   ├── GameActions.tsx          # Action buttons
 │   ├── GameClient.tsx           # Main game client component
-│   ├── LoginButton.tsx          # Google login button
+│   ├── PetNameSelector.tsx      # Pet name selection screen
 │   └── StatsBar.tsx             # Stats display bars
-├── lib/
-│   ├── types.ts                 # TypeScript types & constants
-│   └── useGameState.ts          # Game state management hook
-├── auth.ts                      # NextAuth configuration
-├── middleware.ts                # Auth middleware
-└── .env.local                   # Environment variables
+└── lib/
+    ├── types.ts                 # TypeScript types & constants
+    └── useGameState.ts          # Game state management hook
 ```
 
 ## 🎮 Game Mechanics

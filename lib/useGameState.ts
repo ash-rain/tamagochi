@@ -6,27 +6,25 @@ import { GameState, INITIAL_STATE, STAT_DECAY_RATE, ACTION_EFFECTS } from './typ
 const STORAGE_KEY = 'tamagotchi-cat-game'
 const UPDATE_INTERVAL = 5000 // 5 seconds
 
-export function useGameState(userId?: string) {
-  const [gameState, setGameState] = useState<GameState>(INITIAL_STATE)
+export function useGameState() {
+  const [gameState, setGameState] = useState<GameState | null>(null)
   const [isLoaded, setIsLoaded] = useState(false)
 
   // Load game state from localStorage
   useEffect(() => {
-    if (!userId) return
-
-    const saved = localStorage.getItem(`${STORAGE_KEY}-${userId}`)
+    const saved = localStorage.getItem(STORAGE_KEY)
     if (saved) {
       const state = JSON.parse(saved)
       setGameState(state)
     }
     setIsLoaded(true)
-  }, [userId])
+  }, [])
 
   // Save game state to localStorage
   useEffect(() => {
-    if (!isLoaded || !userId) return
-    localStorage.setItem(`${STORAGE_KEY}-${userId}`, JSON.stringify(gameState))
-  }, [gameState, isLoaded, userId])
+    if (!isLoaded || !gameState) return
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState))
+  }, [gameState, isLoaded])
 
   // Calculate mood based on stats
   const calculateMood = (state: GameState): GameState['mood'] => {
@@ -41,6 +39,7 @@ export function useGameState(userId?: string) {
   // Update stats based on time passed
   const updateStats = useCallback(() => {
     setGameState(prev => {
+      if (!prev) return prev
       const now = Date.now()
       const minutesPassed = Math.max(0, (now - prev.lastFed) / 60000)
 
@@ -76,25 +75,28 @@ export function useGameState(userId?: string) {
 
   // Update stats periodically
   useEffect(() => {
-    if (!isLoaded) return
+    if (!isLoaded || !gameState) return
 
     const interval = setInterval(updateStats, UPDATE_INTERVAL)
     return () => clearInterval(interval)
-  }, [isLoaded, updateStats])
+  }, [isLoaded, gameState, updateStats])
 
   // Game actions
   const feed = useCallback(() => {
-    setGameState(prev => ({
-      ...prev,
-      hunger: Math.min(100, prev.hunger + ACTION_EFFECTS.feed.hunger),
-      health: Math.min(100, prev.health + ACTION_EFFECTS.feed.health),
-      lastFed: Date.now(),
-    }))
+    setGameState(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        hunger: Math.min(100, prev.hunger + ACTION_EFFECTS.feed.hunger),
+        health: Math.min(100, prev.health + ACTION_EFFECTS.feed.health),
+        lastFed: Date.now(),
+      }
+    })
   }, [])
 
   const play = useCallback(() => {
     setGameState(prev => {
-      if (prev.energy < 15) return prev // Too tired to play
+      if (!prev || prev.energy < 15) return prev
       return {
         ...prev,
         happiness: Math.min(100, prev.happiness + ACTION_EFFECTS.play.happiness),
@@ -105,27 +107,42 @@ export function useGameState(userId?: string) {
   }, [])
 
   const sleep = useCallback(() => {
-    setGameState(prev => ({
-      ...prev,
-      energy: Math.min(100, prev.energy + ACTION_EFFECTS.sleep.energy),
-      happiness: Math.min(100, prev.happiness + ACTION_EFFECTS.sleep.happiness),
-      lastSlept: Date.now(),
-    }))
+    setGameState(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        energy: Math.min(100, prev.energy + ACTION_EFFECTS.sleep.energy),
+        happiness: Math.min(100, prev.happiness + ACTION_EFFECTS.sleep.happiness),
+        lastSlept: Date.now(),
+      }
+    })
   }, [])
 
   const giveMedicine = useCallback(() => {
-    setGameState(prev => ({
-      ...prev,
-      health: Math.min(100, prev.health + ACTION_EFFECTS.medicine.health),
-    }))
+    setGameState(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        health: Math.min(100, prev.health + ACTION_EFFECTS.medicine.health),
+      }
+    })
+  }, [])
+
+  const createPet = useCallback((name: string) => {
+    const newPet = {
+      ...INITIAL_STATE,
+      name,
+      createdAt: Date.now(),
+      lastFed: Date.now(),
+      lastPlayed: Date.now(),
+      lastSlept: Date.now(),
+    }
+    setGameState(newPet)
   }, [])
 
   const resetGame = useCallback(() => {
-    setGameState(INITIAL_STATE)
-  }, [])
-
-  const setName = useCallback((name: string) => {
-    setGameState(prev => ({ ...prev, name }))
+    localStorage.removeItem(STORAGE_KEY)
+    setGameState(null)
   }, [])
 
   return {
@@ -135,7 +152,7 @@ export function useGameState(userId?: string) {
     play,
     sleep,
     giveMedicine,
+    createPet,
     resetGame,
-    setName,
   }
 }
