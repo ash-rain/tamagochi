@@ -62,7 +62,7 @@ export function GameClient() {
             <div className="text-5xl">🐱</div>
             <div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
-                Tamagotchi Cat
+                Purrsona
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Virtual Pet Game

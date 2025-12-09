@@ -1,8 +1,8 @@
-# 🎮 Setup Instructions - Tamagotchi Cat Game
+# 🎮 Setup Instructions - Purrsona
 
 ## ✅ What's Been Created
 
-Your Tamagotchi Cat game is now complete! Here's what was built:
+Your Purrsona game is now complete! Here's what was built:
 
 ### 🏗️ Core Features
 - ✅ Pet naming system - choose your cat's name

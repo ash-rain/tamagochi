@@ -1,6 +1,6 @@
-# 🐱 Tamagotchi Cat Game
+# 🐱 Purrsona
 
-A cute virtual pet Tamagotchi-style game featuring an adorable cat character! Built with Next.js 15, React 19, and TypeScript.
+A cute virtual pet game featuring an adorable cat character! Built with Next.js 15, React 19, and TypeScript.
 
 ## ✨ Features
 
