@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🐱 Tamagotchi Cat Game
 
-## Getting Started
+A cute virtual pet Tamagotchi-style game featuring an adorable cat character! Built with Next.js 15, React 19, TypeScript, and NextAuth for Google authentication.
 
-First, run the development server:
+## ✨ Features
 
+- 🎮 **Interactive Gameplay**: Feed, play with, and take care of your virtual cat
+- 😺 **Cute Cat Character**: Animated cat with different moods and expressions
+- 📊 **Real-time Stats**: Track hunger, happiness, energy, and health
+- 🎨 **Beautiful UI**: Modern design with smooth animations
+- 🔐 **Google Authentication**: Secure login with Google OAuth
+- 💾 **Persistent Storage**: Your pet's data is saved locally per user
+- ⏰ **Time-based Mechanics**: Stats decrease over time, requiring regular care
+- 🌓 **Dark Mode Support**: Looks great in light and dark themes
+
+## 🎯 How to Play
+
+1. **Sign in** with your Google account
+2. **Take care** of your cat by:
+   - 🍖 **Feed**: Increases hunger and health
+   - 🎾 **Play**: Boosts happiness (costs energy)
+   - 😴 **Sleep**: Restores energy and happiness
+   - 💊 **Medicine**: Heals your cat when sick
+
+3. **Watch your stats**: Keep all bars high to maintain a happy, healthy cat!
+4. **Check regularly**: Stats decrease over time, so visit often!
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ installed
+- A Google Cloud Project for OAuth credentials
+
+### Installation
+
+1. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Set up Google OAuth:
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project or select existing
+   - Navigate to **APIs & Services > Credentials**
+   - Create **OAuth 2.0 Client ID**
+   - Add authorized redirect URI: `http://localhost:3000/api/auth/callback/google`
+   - Copy your Client ID and Client Secret
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Configure environment variables in `.env.local`:
+   ```env
+   GOOGLE_CLIENT_ID=your_google_client_id_here
+   GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+   AUTH_SECRET=your_auth_secret_here
+   ```
+   - Generate AUTH_SECRET with: `openssl rand -base64 32`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run the development server:
+```bash
+npm run dev
+```
 
-## Learn More
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework**: Next.js 15 (App Router)
+- **UI Library**: React 19
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4
+- **Authentication**: NextAuth.js v5
+- **Icons**: Lucide React
+- **State Management**: React Hooks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📁 Project Structure
 
-## Deploy on Vercel
+```
+tamagochi/
+├── app/
+│   ├── api/auth/[...nextauth]/  # NextAuth API routes
+│   ├── globals.css              # Global styles & animations
+│   ├── layout.tsx               # Root layout
+│   └── page.tsx                 # Main game page
+├── components/
+│   ├── CatCharacter.tsx         # Animated cat character
+│   ├── GameActions.tsx          # Action buttons
+│   ├── GameClient.tsx           # Main game client component
+│   ├── LoginButton.tsx          # Google login button
+│   └── StatsBar.tsx             # Stats display bars
+├── lib/
+│   ├── types.ts                 # TypeScript types & constants
+│   └── useGameState.ts          # Game state management hook
+├── auth.ts                      # NextAuth configuration
+├── middleware.ts                # Auth middleware
+└── .env.local                   # Environment variables
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🎮 Game Mechanics
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Stats Decay Rates (per minute)
+- **Hunger**: -2 points
+- **Happiness**: -1.5 points
+- **Energy**: -1 point
+
+### Action Effects
+- **Feed**: +30 hunger, +5 health
+- **Play**: +25 happiness, -15 energy (requires 15+ energy)
+- **Sleep**: +40 energy, +10 happiness
+- **Medicine**: +30 health (only when health < 90)
+
+### Mood System
+Your cat's mood changes based on stats:
+- 😺 **Happy**: High hunger, happiness, and energy
+- 😿 **Sad**: Low happiness
+- 😴 **Tired**: Low energy
+- 🍖 **Hungry**: Low hunger
+- 🤒 **Sick**: Low health
+- 😐 **Neutral**: Everything is okay
+
+## 🎨 Customization
+
+You can customize the game by editing:
+- **Cat appearance**: `components/CatCharacter.tsx`
+- **Game constants**: `lib/types.ts`
+- **UI colors**: Tailwind classes in components
+- **Animation speeds**: `app/globals.css`
+
+## 📝 License
+
+MIT License - feel free to use this project for learning or personal use!
+
+---
+
+Made with ❤️ and ☕
