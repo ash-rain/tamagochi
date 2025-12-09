@@ -17,11 +17,11 @@ export default async function Home() {
               Your virtual pet companion
             </p>
           </div>
-          
+
           <div className="text-8xl animate-bounce">
             🐱
           </div>
-          
+
           <div className="text-center space-y-2">
             <p className="text-gray-700 dark:text-gray-200 font-medium">
               Take care of your adorable cat!
@@ -30,7 +30,7 @@ export default async function Home() {
               Feed, play, and watch it grow
             </p>
           </div>
-          
+
           <LoginButton />
         </div>
       </div>

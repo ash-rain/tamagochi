@@ -25,11 +25,10 @@ export function GameActions({ onFeed, onPlay, onSleep, onMedicine, canPlay, heal
       <button
         onClick={onPlay}
         disabled={!canPlay}
-        className={`flex flex-col items-center gap-2 p-6 ${
-          canPlay
+        className={`flex flex-col items-center gap-2 p-6 ${canPlay
             ? 'bg-gradient-to-br from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600'
             : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
-        } text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:transform-none disabled:shadow-lg`}
+          } text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:transform-none disabled:shadow-lg`}
       >
         <Activity className="w-8 h-8" />
         <span className="font-bold text-lg">Play</span>
@@ -46,11 +45,10 @@ export function GameActions({ onFeed, onPlay, onSleep, onMedicine, canPlay, heal
       <button
         onClick={onMedicine}
         disabled={health >= 90}
-        className={`flex flex-col items-center gap-2 p-6 ${
-          health < 90
+        className={`flex flex-col items-center gap-2 p-6 ${health < 90
             ? 'bg-gradient-to-br from-green-400 to-green-500 hover:from-green-500 hover:to-green-600'
             : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
-        } text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:transform-none disabled:shadow-lg`}
+          } text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:transform-none disabled:shadow-lg`}
       >
         <Pill className="w-8 h-8" />
         <span className="font-bold text-lg">Medicine</span>

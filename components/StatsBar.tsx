@@ -12,7 +12,7 @@ interface StatsBarProps {
 
 export function StatsBar({ label, value, max, color, icon }: StatsBarProps) {
   const percentage = (value / max) * 100
-  
+
   const getIcon = () => {
     switch (icon) {
       case 'health': return <Heart className="w-5 h-5" />

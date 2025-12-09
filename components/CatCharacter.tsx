@@ -61,24 +61,24 @@ export function CatCharacter({ mood, isAnimating, action }: CatCharacterProps) {
               <div className="text-6xl">△</div>
               <div className="text-6xl">△</div>
             </div>
-            
+
             {/* Face */}
             <div className="relative bg-gradient-to-br from-pink-100 to-pink-200 dark:from-pink-800 dark:to-pink-900 rounded-full w-40 h-40 flex items-center justify-center shadow-2xl border-4 border-pink-300 dark:border-pink-700">
               {/* Eyes */}
               <div className="absolute top-12 left-0 right-0 flex justify-center gap-8 text-3xl font-bold text-gray-800 dark:text-gray-200">
                 {getEyes()}
               </div>
-              
+
               {/* Nose */}
               <div className="absolute top-20 text-2xl">
                 ▽
               </div>
-              
+
               {/* Mouth */}
               <div className="absolute top-24 text-3xl">
                 {getMouth()}
               </div>
-              
+
               {/* Whiskers */}
               <div className="absolute top-20 left-[-20px] text-gray-600 dark:text-gray-300">
                 <div className="transform -rotate-12">───</div>

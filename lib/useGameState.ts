@@ -13,7 +13,7 @@ export function useGameState(userId?: string) {
   // Load game state from localStorage
   useEffect(() => {
     if (!userId) return
-    
+
     const saved = localStorage.getItem(`${STORAGE_KEY}-${userId}`)
     if (saved) {
       const state = JSON.parse(saved)
@@ -43,11 +43,11 @@ export function useGameState(userId?: string) {
     setGameState(prev => {
       const now = Date.now()
       const minutesPassed = Math.max(0, (now - prev.lastFed) / 60000)
-      
+
       const newHunger = Math.max(0, prev.hunger - minutesPassed * STAT_DECAY_RATE.hunger)
       const newHappiness = Math.max(0, prev.happiness - (now - prev.lastPlayed) / 60000 * STAT_DECAY_RATE.happiness)
       const newEnergy = Math.max(0, prev.energy - (now - prev.lastSlept) / 60000 * STAT_DECAY_RATE.energy)
-      
+
       // Health decreases if critical stats are low
       let newHealth = prev.health
       if (newHunger < 20 || newEnergy < 20) {
@@ -77,7 +77,7 @@ export function useGameState(userId?: string) {
   // Update stats periodically
   useEffect(() => {
     if (!isLoaded) return
-    
+
     const interval = setInterval(updateStats, UPDATE_INTERVAL)
     return () => clearInterval(interval)
   }, [isLoaded, updateStats])
